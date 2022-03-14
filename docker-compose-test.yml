@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  ###################
+  ## TEST DATABASE ##
+  test_postgres_db:
+    image: postgres
+    networks:
+      - database
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=test
+    restart: always
+    volumes:
+      - /tmp:/tmp
+    container_name: test_postgres_db
+  #################
+  ## TEST SERVER ##
+  server_test:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    networks:
+      - webapp
+      - database
+    ports:
+      - 5600:5600
+    volumes:
+      - ./server/node_modules:/app/node_modules
+      - ./server/src:/app/src
+    depends_on:
+      - test_postgres_db
+    restart: always
+    command: ['npm', 'run', 'test:e2e']
+    container_name: server_test
+networks:
+  webapp:
+    driver: bridge
+  database:
+    driver: bridge

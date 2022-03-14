@@ -1,0 +1,11 @@
+{
+    "type": "postgres",
+    "host": "postgres_db",
+    "username": "admin",
+    "password": "admin",
+    "synchronize": true,
+    "logging": true,
+    "database": "todo",
+    "port": 5432,
+    "entities": ["dist/**/*.entity.js"]
+}
